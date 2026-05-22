@@ -301,8 +301,15 @@ function generateIndexPage(links) {
     .header-top {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 0.75rem;
       margin-bottom: 1.5rem;
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
     
     .logo {
@@ -329,6 +336,51 @@ function generateIndexPage(links) {
       color: var(--text-secondary);
       max-width: 480px;
       line-height: 1.7;
+    }
+    
+    /* Theme Toggle Button */
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    
+    .theme-toggle:hover {
+      border-color: var(--text-secondary);
+      transform: translateY(-1px);
+    }
+    
+    .theme-toggle:active {
+      transform: translateY(0);
+    }
+    
+    .theme-toggle svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--text-primary);
+      transition: transform 0.3s ease;
+    }
+    
+    .theme-toggle:hover svg {
+      transform: rotate(15deg);
+    }
+    
+    [data-theme="dark"] .theme-toggle .icon-sun,
+    :root:not([data-theme]) .theme-toggle .icon-sun,
+    :root[data-theme="light"] .theme-toggle .icon-moon {
+      display: none;
+    }
+    
+    :root[data-theme="dark"] .theme-toggle .icon-moon {
+      display: block;
     }
     
     /* Stats Bar */
@@ -517,6 +569,17 @@ function generateIndexPage(links) {
         font-size: 0.9375rem;
       }
       
+      .theme-toggle {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+      }
+      
+      .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+      }
+      
       .stats-bar {
         padding: 0.875rem 1rem;
       }
@@ -549,9 +612,29 @@ function generateIndexPage(links) {
       }
     }
     
-    /* Dark mode support */
+    /* Manual dark mode */
+    [data-theme="dark"] {
+      --bg-primary: #0f0f0f;
+      --bg-secondary: #1a1a1a;
+      --text-primary: #f5f5f5;
+      --text-secondary: #a0a0a0;
+      --text-muted: #666;
+      --accent: #ef4444;
+      --accent-hover: #dc2626;
+      --border: #2a2a2a;
+      --card-bg: #141414;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-hover: 0 2px 6px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5);
+    }
+    
+    [data-theme="dark"] .link-card[data-type="choice"] .card-icon {
+      background: #3d2a0f;
+      color: #fbbf24;
+    }
+    
+    /* System dark mode preference (when no manual override) */
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root:not([data-theme]) {
         --bg-primary: #0f0f0f;
         --bg-secondary: #1a1a1a;
         --text-primary: #f5f5f5;
@@ -565,7 +648,7 @@ function generateIndexPage(links) {
         --shadow-hover: 0 2px 6px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5);
       }
       
-      .link-card[data-type="choice"] .card-icon {
+      :root:not([data-theme]) .link-card[data-type="choice"] .card-icon {
         background: #3d2a0f;
         color: #fbbf24;
       }
@@ -576,8 +659,14 @@ function generateIndexPage(links) {
   <header class="header">
     <div class="header-inner">
       <div class="header-top">
-        <div class="logo">/</div>
-        <h1 class="site-title">Shortlink Directory</h1>
+        <div class="header-brand">
+          <div class="logo">/</div>
+          <h1 class="site-title">Shortlink Directory</h1>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.2 4.2l1.4 1.4m12.8 12.8l1.4 1.4M1 12h2m18 0h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></g></svg>
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M20.958 15.325c.204-.486-.379-.9-.868-.684a7.7 7.7 0 0 1-3.101.648c-4.185 0-7.577-3.324-7.577-7.425a7.3 7.3 0 0 1 1.134-3.91c.284-.448-.057-1.068-.577-.936C5.96 4.041 3 7.613 3 11.862C3 16.909 7.175 21 12.326 21c3.9 0 7.24-2.345 8.632-5.675Z"/><path d="M15.611 3.103c-.53-.354-1.162.278-.809.808l.63.945a2.33 2.33 0 0 1 0 2.588l-.63.945c-.353.53.28 1.162.81.808l.944-.63a2.33 2.33 0 0 1 2.588 0l.945.63c.53.354 1.162-.278.808-.808l-.63-.945a2.33 2.33 0 0 1 0-2.588l.63-.945c.354-.53-.278-1.162-.809-.808l-.944.63a2.33 2.33 0 0 1-2.588 0z"/></g></svg>
+        </button>
       </div>
       <p class="header-desc">个人短链导航页面，点击下方任意卡片即可跳转至对应链接。</p>
     </div>
@@ -617,6 +706,49 @@ function generateIndexPage(links) {
       </p>
     </div>
   </footer>
+  
+  <script>
+    (function() {
+      const themeToggle = document.getElementById('themeToggle');
+      const root = document.documentElement;
+      
+      // Get saved theme or default to system preference
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      // Apply initial theme
+      if (savedTheme) {
+        root.setAttribute('data-theme', savedTheme);
+      } else if (systemPrefersDark) {
+        root.setAttribute('data-theme', 'dark');
+      }
+      
+      // Toggle theme on button click
+      themeToggle.addEventListener('click', function() {
+        const currentTheme = root.getAttribute('data-theme');
+        let newTheme;
+        
+        if (currentTheme === 'dark') {
+          newTheme = 'light';
+        } else if (currentTheme === 'light') {
+          newTheme = 'dark';
+        } else {
+          // No explicit theme set, check system preference
+          newTheme = systemPrefersDark ? 'light' : 'dark';
+        }
+        
+        root.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+      });
+      
+      // Listen for system theme changes (only when no manual override)
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('theme')) {
+          root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>`;
 }
